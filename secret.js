@@ -68,20 +68,6 @@ function getSecret(shares) {
     return totalNum / commonDen;
 }
 
-function getComb(arr, k) {
-    const res = [];
-    const build = (start, comb) => {
-        if (comb.length === k) return res.push([...comb]);
-        for (let i = start; i < arr.length; i++) {
-            comb.push(arr[i]);
-            build(i + 1, comb);
-            comb.pop();
-        }
-    };
-    build(0, []);
-    return res;
-}
-
 function solve(input) {
     const keys = input.keys || {};
     const n = keys.n, k = keys.k;

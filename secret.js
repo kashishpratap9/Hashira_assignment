@@ -33,40 +33,6 @@ function decodeBigInt(baseStr, valStr) {
     return res;
 }
 
-function getSecret(shares) {
-    let commonDen = 1n;
-    const n = shares.length;
-    const fractions = [];
-
-    for (let i = 0; i < n; ++i) {
-        const [x, y] = shares[i];
-        let num = 1n, den = 1n;
-
-        for (let j = 0; j < n; ++j) {
-            if (j === i) continue;
-            const [xj] = shares[j];
-            if (x === xj) throw new Error(`Duplicate x: ${x}`);
-            num *= -xj;
-            den *= x - xj;
-        }
-
-        fractions.push({ num: y * num, den });
-        commonDen = lcm(commonDen, den);
-    }
-
-    let totalNum = 0n;
-    for (const frac of fractions) {
-        const scale = commonDen / frac.den;
-        totalNum += frac.num * scale;
-    }
-
-    if (commonDen === 0n) throw new Error("Zero denominator.");
-    if (totalNum % commonDen !== 0n) {
-        throw new Error(`Secret not exact: ${totalNum}/${commonDen}`);
-    }
-
-    return totalNum / commonDen;
-}
 
 function solve(input) {
     const keys = input.keys || {};
